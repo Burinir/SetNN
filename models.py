@@ -7,10 +7,23 @@ import Models.DeepSetPointCloud
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+#returns net, criterion
+def getmodel(nettype, dataset):
+    if nettype == 'error':
+        raise ValueError("No Net was specified" )
+    if dataset == 'error':
+        raise ValueError("No Dataset was specified" )
+
+    #Get Network
+    if nettype == 'set_transformer':
+        return  getSetTransformer(dataset)
+    elif nettype == 'deepset':
+        return getDeepSet(dataset)
+    else:
+        raise ValueError('Invalid net {}'.format(nettype))
 
 
 def getSetTransformer(dataset):
-
     if dataset == 'pointcloud100':
         net = SetTransformerPointCloud(dim_hidden = 256, num_heads = 4, num_inds=16)
         criterion = nn.CrossEntropyLoss()
@@ -27,7 +40,7 @@ def getDeepSet(dataset):
         net = SmallDeepSet(pool= "mean")
         criterion = nn.L1Loss()
     elif dataset == 'pointcloud100':
-        net = DeepSetPointCloud.D(d_dim=256, pool='max') #will take max for equivariant layers, then mean to combine all inputs
+        net = Models.DeepSetPointCloud.D(d_dim=256, pool='max') #will take max for equivariant layers, then mean to combine all inputs
         criterion = nn.CrossEntropyLoss()
     else:
         raise ValueError("This Dataset does not work:{}".format(dataset))
@@ -103,7 +116,7 @@ class SetTransformerPointCloud(nn.Module):
         num_heads=4,
         ln=False,
     ):
-        super(SetTransformer, self).__init__()
+        super(SetTransformerPointCloud, self).__init__()
         self.enc = nn.Sequential(
             ISAB(dim_input, dim_hidden, num_heads, num_inds, ln=ln),
             ISAB(dim_hidden, dim_hidden, num_heads, num_inds, ln=ln),

@@ -11,46 +11,70 @@ import time
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import models
+import datasets
+from helperFunctions import wasCorrect, getProblemType
 # from mixture_of_mvns import MixtureOfMVNs
 # from mvn_diag import MultivariateNormalDiag
+
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--mode', type=str, default='train')
 parser.add_argument('--net', type=str, default='error')
 parser.add_argument('--dataset',type=str, default='error')
-parser.add_argument('--num_steps', type=int, default=50000)
+parser.add_argument('--num_epochs', type=int, default=5000)
 parser.add_argument('--test_freq', type=int, default=200)
 parser.add_argument('--save_freq', type=int, default=400)
 
 args = parser.parse_args()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+useCuda = torch.cuda.is_available()
 
 
-if args.net == 'error':
-    raise ValueError("No Net was specified" )
-if args.dataset == 'error':
-    raise ValueError("No Dataset was specified" )
 if args.mode == 'test':
     raise NotImplementedError("Since Networks aren't saved yet, Testmode does not work yet")
 
-#Get Network
-if args.net == 'set_transformer':
-    net, criterion = models.getSetTransformer(args.dataset)
-elif args.net == 'deepset':
-    net, criterion = models.getDeepSet(args.dataset)
-else:
-    raise ValueError('Invalid net {}'.format(args.net))
+net, criterion = models.getmodel(args.net, args.dataset)
+if(useCuda):
+    net.cuda()
 
 #Get Dataset -> Network, Criterion should automatically fit it
-if args.dataset == 'maximum':
-    raise NotImplementedError()
-if args.dataset == 'pointcloud100':
-    
+#idea: dataset is in data -> data.train_data, data.test_data
+data = datasets.getdata(args.dataset)
+
 
 
 def train():
-    raise NotImplementedError
     #model.train(X,Y,max_steps) #Idea: each model has own train function, give input, labels and maxsteps
+    optimizer = torch.optim.Adam(net.parameters(), lr=1e-3)
+    problemtype = getProblemType(args.dataset)
+
+    for epoch in range(args.num_epochs):
+        net.train()
+        losses, total, correct = [], 0, 0
+        for X,Y in data.train_data():
+            X = torch.Tensor(X)
+            Y = torch.Tensor(Y)
+            if(problemtype == 0):
+                Y = Y.long()
+            if(useCuda):
+                X = X.cuda(device)
+                Y = Y.cuda(device)
+            #print(X)
+            pred = net(X)
+            loss = criterion(pred, Y)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            losses.append(loss.item())
+            total += Y.shape[0]
+            correct += wasCorrect(pred, Y, problemtype)
+
+        avg_loss, avg_acc = np.mean(losses), correct / total
+        print(f"Epoch {epoch}: train loss {avg_loss:.3f} train acc {avg_acc:.3f}")
+
+
+
 
 def test():
     raise NotImplementedError
