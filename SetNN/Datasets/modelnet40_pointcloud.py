@@ -1,5 +1,11 @@
 import numpy as np
 import h5py
+import os
+try:
+    get_ipython
+    from tqdm import tqdm_notebook as tqdm
+except:
+    from tqdm import tqdm
 
 #From https://github.com/manzilzaheer/DeepSets/tree/master/PointClouds
 
@@ -36,18 +42,18 @@ def standardize(x):
     return (z - mean) / std
 
 
-class ModelFetcher(object):
+class PointCloudData(object):
     def __init__(self, fname, batch_size, down_sample=10, do_standardize=True, do_augmentation=False):
 
-        self.fname = fname
+        self.fname = os.path.join(os.getcwd(), fname)
         self.batch_size = batch_size
         self.down_sample = down_sample
 
-        with h5py.File(fname, 'r') as f:
+        with h5py.File(self.fname, 'r') as f:
             self._train_data = np.array(f['tr_cloud'])
-            self._train_label = np.array(f['tr_labels'])
+            self._train_label = np.array(f['tr_label'])
             self._test_data = np.array(f['test_cloud'])
-            self._test_label = np.array(f['test_labels'])
+            self._test_label = np.array(f['test_label'])
 
         self.num_classes = np.max(self._train_label) + 1
 
@@ -69,7 +75,7 @@ class ModelFetcher(object):
         np.random.set_state(rng_state)
         np.random.shuffle(self._train_label)
         return tqdm(self.next_train_batch(),
-                    desc='Train loss: {:.4f}'.format(loss),
+                    desc='Progress in current Epoch',
                     total=self.num_train_batches, mininterval=1.0, leave=False)
         #return self.next_train_batch()
 
@@ -78,9 +84,9 @@ class ModelFetcher(object):
         end = self.batch_size
         N = len(self._train_data)
         perm = self.perm
-        batch_card = len(perm) * np.ones(self.batch_size, dtype=np.int32)
+        #batch_card = len(perm) * np.ones(self.batch_size, dtype=np.int32)
         while end < N:
-            yield self.prep2(self._train_data[start:end, perm]), batch_card, self._train_label[start:end]
+            yield self.prep2(self._train_data[start:end, perm]), self._train_label[start:end] #batch_card, self._train_label[start:end]
             start = end
             end += self.batch_size
 
