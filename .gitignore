@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# Data
+*.h5
+Datasets/ModelNet40/
+
 # Distribution / packaging
 .Python
 build/

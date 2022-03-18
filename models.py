@@ -3,6 +3,7 @@ from Models.transformermodules import *
 import torch
 import torch.nn as nn
 import Models.DeepSetPointCloud
+import Models.Pointnet as pointnet
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -19,6 +20,8 @@ def getmodel(nettype, dataset):
         return  getSetTransformer(dataset)
     elif nettype == 'deepset':
         return getDeepSet(dataset)
+    elif nettype == 'pointnet':
+        return getPointNet(dataset)
     else:
         raise ValueError('Invalid net {}'.format(nettype))
 
@@ -39,12 +42,22 @@ def getDeepSet(dataset):
     if dataset == 'maximum':
         net = SmallDeepSet(pool= "mean")
         criterion = nn.L1Loss()
-    elif dataset == 'pointcloud100':
+    elif dataset == 'pointcloud100' or dataset == 'pointcloud1000':
         net = Models.DeepSetPointCloud.D(d_dim=256, pool='max') #will take max for equivariant layers, then mean to combine all inputs
+        criterion = nn.CrossEntropyLoss()
+    elif dataset == 'pointcloud5000':
+        net = Models.DeepSetPointCloud.D(d_dim=512, pool='max') #will take max for equivariant layers, then mean to combine all inputs
         criterion = nn.CrossEntropyLoss()
     else:
         raise ValueError("This Dataset does not work:{}".format(dataset))
     return net, criterion
+
+def getPointNet(d):
+    if d =='pointcloud100' or d=='pointcloud1000' or d=='pointcloud5000':
+        net = pointnet.PointNet()
+        criterion = nn.NLLLoss()
+        return net, criterion
+    else: raise ValueError("pointnet only works on pointclouds, not with{}".format(d))
 
 
 class DeepSet(nn.Module):
