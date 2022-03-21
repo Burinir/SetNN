@@ -99,8 +99,8 @@ class PointCloudData(object):
         start = 0
         end = self.batch_size
         N = len(self._test_data)
-        batch_card = (self._train_data.shape[1] // self.down_sample) * np.ones(self.batch_size, dtype=np.int32)
+        #batch_card = (self._train_data.shape[1] // self.down_sample) * np.ones(self.batch_size, dtype=np.int32)
         while end < N:
-            yield self.prep1(self._test_data[start:end, 1::self.down_sample]), batch_card, self._test_label[start:end]
+            yield self.prep1(self._test_data[start:end, 1::self.down_sample]), self._test_label[start:end]
             start = end
             end += self.batch_size

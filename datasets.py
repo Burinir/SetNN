@@ -15,5 +15,9 @@ def getdata(dataset):
                             batch_size=64, down_sample=2, do_standardize=True, do_augmentation = False)
     elif dataset == 'maximum':
         return Datasets.maximum.MaximumData()
+    elif dataset == 'max4':
+        return Datasets.maximum.Max4Data()
+    elif dataset == 'minmax':
+        return Datasets.maximum.MinMaxData()
     else:
         raise ValueError('Invalid net {}'.format(dataset))
