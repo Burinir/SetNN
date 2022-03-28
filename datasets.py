@@ -21,7 +21,7 @@ def getdata(dataset):
         return Datasets.maximum.MaximumData()
     elif dataset == 'max4':
         return Datasets.maximum.Max4Data()
-    elif dataset == 'minmax':
+    elif dataset == 'minmax' or dataset == 'min2max2':
         return Datasets.maximum.Min2Max2Data()
     elif dataset == 'mnist_sum' or dataset =='MNIST_sum' or dataset == 'mnistsum' or dataset == 'MNISTsum':
         return Datasets.MNIST.MNIST_sum_data()
