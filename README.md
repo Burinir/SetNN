@@ -27,7 +27,7 @@ Return the biggest four elements of a set of numbers
 #### Min2max2:
 Return the two smallest and the two biggest elements of a set of numbers
 #### Pointcloud:
-Object classification with 40 classes from a point cloud with 100, 1000, 5000 points, by editing the code, the point cloud can be perturbed as well}
+Object classification with 40 classes from a point cloud with 100, 1000, 5000 points, by editing the code, the point cloud can be perturbed as well
 #### Cardinality:
 Return the number of elements of a set
 #### Mode:
