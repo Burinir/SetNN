@@ -1,5 +1,9 @@
 import Datasets.modelnet40_pointcloud
 import Datasets.maximum
+import Datasets.MNIST
+import Datasets.cardinality
+import Datasets.clustering
+import Datasets.mode
 
 
 
@@ -18,6 +22,14 @@ def getdata(dataset):
     elif dataset == 'max4':
         return Datasets.maximum.Max4Data()
     elif dataset == 'minmax':
-        return Datasets.maximum.MinMaxData()
+        return Datasets.maximum.Min2Max2Data()
+    elif dataset == 'mnist_sum' or dataset =='MNIST_sum' or dataset == 'mnistsum' or dataset == 'MNISTsum':
+        return Datasets.MNIST.MNIST_sum_data()
+    elif dataset == 'cardinality':
+        return Datasets.cardinality.CardinalityData()
+    elif dataset == 'eq2':
+        return Datasets.clustering.Eq2Data()
+    elif dataset == 'mode':
+        return Datasets.mode.ModeData()
     else:
         raise ValueError('Invalid net {}'.format(dataset))

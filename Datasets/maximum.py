@@ -2,11 +2,11 @@ import numpy as np
 import math
 
 class MaximumData(object):
-    def __init__(self, batch_size=64, numberOfElements=10000, max_length = 20):
+    def __init__(self, batch_size=64, numberOfElements=20000, max_length = 40):
         self.batch_size = batch_size
         #each element in a batch must have same length
-        num_train_batches = round(0.9*numberOfElements /batch_size)
-        num_test_batches = round(0.1*num_train_batches)
+        num_train_batches = round(numberOfElements /batch_size)
+        num_test_batches = num_train_batches
 
         self._train_data = []
         for i in range(num_train_batches):
@@ -41,12 +41,12 @@ class MaximumData(object):
 
 
 class Max4Data(object):
-    def __init__(self, batch_size=64, numberOfElements=10000, max_length = 20):
+    def __init__(self, batch_size=64, numberOfElements=10000, max_length = 40):
         self.batch_size = batch_size
         min_length = 4
         #each element in a batch must have same length
-        num_train_batches = round(0.9*numberOfElements /batch_size)
-        num_test_batches = round(0.1*num_train_batches)
+        num_train_batches = round(numberOfElements /batch_size)
+        num_test_batches = num_train_batches
 
         self._train_data = []
         for i in range(num_train_batches):
@@ -80,13 +80,13 @@ class Max4Data(object):
         return self._test_data
 
 
-class MinMaxData(object):
-    def __init__(self, batch_size=64, numberOfElements=10000, max_length = 20):
+class Min2Max2Data(object):
+    def __init__(self, batch_size=64, numberOfElements=10000, max_length = 40):
         self.batch_size = batch_size
         min_length = 4
         #each element in a batch must have same length
-        num_train_batches = round(0.9*numberOfElements /batch_size)
-        num_test_batches = round(0.1*num_train_batches)
+        num_train_batches = round(numberOfElements /batch_size)
+        num_test_batches = num_train_batches
 
         self._train_data = []
         for i in range(num_train_batches):
@@ -123,7 +123,7 @@ class MinMaxData(object):
 
 
 #Tests:
-# data = MinMaxData(2,6,10)
+# data = 2Min2MaxData(2,6,10)
 # train_data = data.train_data()
 # for X,Y in train_data:
 #     print("hello")

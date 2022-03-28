@@ -9,6 +9,7 @@ __pycache__/
 # Data
 *.h5
 Datasets/ModelNet40/
+Datasets/MNIST_data/
 
 # Distribution / packaging
 .Python

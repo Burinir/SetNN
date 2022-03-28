@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 import torch.nn.functional as F
+import Models.FSPool
 
 
 # From: https://github.com/nikitakaraevv/pointnet
@@ -46,7 +47,7 @@ class Tnet(nn.Module):
 
 
 class Transform(nn.Module):
-   def __init__(self):
+   def __init__(self, pool):
         super().__init__()
         self.input_transform = Tnet(k=3)
         self.feature_transform = Tnet(k=64)
@@ -55,6 +56,16 @@ class Transform(nn.Module):
         self.conv2 = nn.Conv1d(64,128,1)
         self.conv3 = nn.Conv1d(128,1024,1)
 
+
+        self.pool = lambda a: torch.max(a, dim = 2)[0]
+        self.fspool = None #only initiate
+        if pool=='mean':
+            self.pool = lambda a: torch.mean(a, dim=2)
+        elif pool =='fspool':
+            self.fspool =  Models.FSPool.FSPool(in_channels=1024, n_pieces=100)
+            self.pool =  lambda a: self.fspool(a)[0]
+        elif pool == 'sum':
+            self.pool = lambda a: nn.sum(a, dim=2)
 
         self.bn1 = nn.BatchNorm1d(64)
         self.bn2 = nn.BatchNorm1d(128)
@@ -72,14 +83,15 @@ class Transform(nn.Module):
 
         xb = F.relu(self.bn2(self.conv2(xb)))
         xb = self.bn3(self.conv3(xb))
-        xb = nn.MaxPool1d(xb.size(-1))(xb)
+        xb = self.pool(xb)
+        #xb, perm = self.pool(xb)
         output = nn.Flatten(1)(xb)
         return output, matrix3x3, matrix64x64
 
 class PointNet(nn.Module):
-    def __init__(self, classes = 40):
+    def __init__(self, classes = 40, pool='max'):
         super().__init__()
-        self.transform = Transform()
+        self.transform = Transform(pool = pool)
         self.fc1 = nn.Linear(1024, 512)
         self.fc2 = nn.Linear(512, 256)
         self.fc3 = nn.Linear(256, classes)
