@@ -9,7 +9,7 @@ This is a program to train and compare different Set Neural Networks on differen
 Note: pointnet only works on the point cloud variations  
 \--num_epochs={For how many epochs you want to train the model}  
 \--test_freq={After how many epochs should the Network be tested}  
-\--pool={max, mean, sum, default}
+\--pool={max, mean, sum, fspool, default}
 
 ### Example:  
 ```
