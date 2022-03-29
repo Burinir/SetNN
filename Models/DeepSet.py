@@ -8,6 +8,7 @@ import h5py
 import pdb
 from tqdm import tqdm, trange
 import Models.FSPool
+import Models.Janossy
 
 
 # @incollection{deepsets,
@@ -51,6 +52,7 @@ class SmallDeepSet(nn.Module):
             self.pool =  lambda a: self.fspool(torch.transpose(a, 1,2))[0]
         elif pool == 'sum':
             self.pool = lambda a: torch.sum(a, dim=1)
+        #self.pool = Models.Janossy.JanossyPool(in_dim=64, h_dim=64, out_dim=64, janossy_k=2)
         #self.pool = pool
 
     def forward(self, x):
