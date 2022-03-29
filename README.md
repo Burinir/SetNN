@@ -1,10 +1,10 @@
 # SetNN
-This is a program to train and compare different Set Neural Networks on different datasets. 
+This is a program to train and compare different Set Neural Networks on different datasets.
 
 ## How to use:
 ### Arguments:
 
---dataset={maximum, max4, min2max2, cardinality, mode, eq2, pointcloud100, pointcloud1000, pointcloud5000}   
+--dataset={maximum, max4, min2max2, sum, mean, cardinality, mode, eq2, pointcloud100, pointcloud1000, pointcloud5000}   
 \--net={deepset, set_transformer, pointnet, repset}  
 Note: pointnet only works on the point cloud variations  
 \--num_epochs={For how many epochs you want to train the model}  

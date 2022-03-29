@@ -51,9 +51,9 @@ if(useCuda):
 
 #Get Dataset -> Network, Criterion should automatically fit it
 #idea: dataset is in data -> data.train_data, data.test_data
-data = datasets.getdata(lower(args.dataset))
+data = datasets.getdata(args.dataset.lower())
 test_freq = args.test_freq
-problemtype = getProblemType(args.dataset)
+problemtype = getProblemType(args.dataset.lower())
 if args.dataset == 'eq2':
     data.avgY()
 

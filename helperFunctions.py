@@ -15,7 +15,7 @@ def wasCorrect(pred, Y, problemtype):
         return (torch.abs(Y-pred)<0.5).sum().item()
 
 def getProblemType(dataset):
-    if dataset == 'maximum' or dataset == 'cardinality':
+    if dataset == 'maximum' or dataset == 'cardinality' or dataset == 'sum' or dataset == 'mean':
         return 1
     elif dataset=='max4' or dataset =='minmax':
         return 2

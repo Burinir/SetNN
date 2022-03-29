@@ -23,7 +23,7 @@ def getdata(dataset):
         return Datasets.maximum.Max4Data()
     elif dataset == 'minmax' or dataset == 'min2max2':
         return Datasets.maximum.Min2Max2Data()
-    elif dataset == 'mnist_sum' or dataset =='MNIST_sum' or dataset == 'mnistsum' or dataset == 'MNISTsum':
+    elif dataset == 'mnist_sum' or dataset == 'mnistsum':
         return Datasets.MNIST.MNIST_sum_data()
     elif dataset == 'cardinality':
         return Datasets.cardinality.CardinalityData()
@@ -31,5 +31,9 @@ def getdata(dataset):
         return Datasets.clustering.Eq2Data()
     elif dataset == 'mode':
         return Datasets.mode.ModeData()
+    elif dataset == 'sum':
+        return Datasets.maximum.SumData()
+    elif dataset == 'mean':
+        return Datasets.maximum.MeanData()
     else:
         raise ValueError('Invalid net {}'.format(dataset))

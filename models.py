@@ -40,7 +40,7 @@ def getSetTransformer(dataset, pool):
     if dataset == 'pointcloud100' or dataset =='pointcloud1000'or dataset =='pointcloud5000':
         net = SetTransformer.SetTransformerPointCloud(dim_hidden = 256, num_heads = 4, num_inds=16)
         criterion = nn.CrossEntropyLoss()
-    elif dataset == 'maximum' or dataset=='cardinality' or dataset == 'mode':
+    elif dataset == 'maximum' or dataset=='cardinality' or dataset == 'mode' or dataset == 'sum' or dataset == 'mean':
         net = SetTransformer.SmallSetTransformer()
         criterion = nn.L1Loss()
     elif dataset == 'max4' or dataset == 'min2max2':
@@ -57,7 +57,7 @@ def getSetTransformer(dataset, pool):
 def getDeepSet(dataset, pool):
     if pool == 'default':
         pool = 'sum'
-    if dataset == 'maximum' or dataset=='cardinality' or dataset == 'mode':
+    if dataset == 'maximum' or dataset=='cardinality' or dataset == 'mode' or dataset == 'sum' or dataset == 'mean':
         net = DeepSet.SmallDeepSet(pool= pool)
         criterion = nn.L1Loss()
     elif dataset == 'max4' or dataset == 'min2max2':
@@ -97,7 +97,7 @@ def getRepSet(d, pool):
         net = RepSet.ApproxRepSetClassifier(n_hidden_sets = 10, n_elements=20, d = 3, n_classes = 40)
         criterion = nn.CrossEntropyLoss()
         return net, criterion
-    if d == 'maximum' or d== 'cardinality' or d=='mode':
+    if d == 'maximum' or d== 'cardinality' or d=='mode' or d=='sum' or d=='mean':
         net = RepSet.ApproxRepSet(n_hidden_sets = 20, n_elements=50, d = 1, n_out = 1)
         criterion = nn.L1Loss()
         return net, criterion
